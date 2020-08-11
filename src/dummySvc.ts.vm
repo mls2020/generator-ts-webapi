@@ -1,0 +1,22 @@
+import {
+  IService,
+  #foreach($item in ${types}) $item.typeName, #end
+} from './ts-webapi/interfaces'
+
+export const svc :IService = {
+#foreach($item in ${api})
+$item.name : ($item.fnArgsDef) => {
+  return Promise.resolve(`supposed to return $item.result object` as any);
+},
+#end
+#foreach($item in ${selApi})
+$item.name : ($item.fnArgsDef) => {
+  return Promise.resolve(`supposed to return $item.result object` as any);
+},
+#end
+#foreach($item in ${procApi})
+$item.name : ($item.fnArgsDef) => {
+  return Promise.resolve(`supposed to return $item.result object` as any);
+},
+#end
+}

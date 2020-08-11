@@ -1,0 +1,91 @@
+import { Router } from 'express'
+import { IService, ExpressOptions } from './interfaces'
+import * as schemas from './schemas'
+
+export const createRouter = (service: IService, options?: ExpressOptions) => {
+  const routes = Router();
+  #foreach($item in $api)
+    #if ($item.verb=='put')
+      routes.$item.verb ('/${item.routeName}/:id', async (req, res, next) => {
+        try {
+          const id = req.params.id;
+          const {value, error} = schemas.schemaFor${item.args}.validate(req.body);
+          if (error) next(error);
+          const result = await service.$item.name (id,value);
+          res.json(result)
+        } catch (error) {
+          next(error);
+        }
+      });
+    #elseif ($item.verb=='post')
+      routes.$item.verb ('/${item.routeName}', async (req, res, next) => {
+        try {
+          const {value, error} = schemas.schemaFor${item.args}.validate(req.body);
+          if (error) next(error);
+          const result = await service.$item.name (value);
+          res.json(result)
+        } catch (error) {
+          next(error);
+        }
+      });
+    #elseif ($item.verb=='delete')
+      routes.$item.verb ('/${item.routeName}/:id', async (req, res, next) => {
+        try {
+          const result = await service.$item.name (req.params.id);
+          res.json(result)
+        } catch (error) {
+          next(error);
+        }
+      });
+    #elseif ($item.verb=='get')
+      #if ($item.list)
+        routes.$item.verb ('/${item.routeName}', async (req, res, next) => {
+          try {
+            const result = await service.$item.name ();
+            res.json(result)
+          } catch (error) {
+            next(error);
+          }
+        });
+      #else
+        routes.$item.verb ('/${item.routeName}/:id', async (req, res, next) => {
+          try {
+            const result = await service.$item.name (req.params.id);
+            res.json(result)
+          } catch (error) {
+            next(error);
+          }
+        });
+      #end
+    #end
+
+  #end
+
+  #foreach($item in $procApi)
+    routes.$item.verb ('/${item.routeName}', async (req, res, next) => {
+      try {
+        const {value,error}= schemas.schemaForArgs_${item.name}.validate(req.body);
+        if (error) next(error);
+        const result = await service.$item.name (value);
+        res.json(result)
+      } catch (error) {
+        next(error);
+      }
+    });
+  #end
+
+  #foreach($item in $selApi)
+    routes.$item.verb ('/${item.routeName}', async (req, res, next) => {
+      try {
+        const {value,error}= schemas.schemaForArgs_${item.name}.validate(req.query);
+        if (error) next(error);
+        const result = await service.$item.name (value);
+        res.json(result)
+      } catch (error) {
+        next(error);
+      }
+    });
+  #end
+
+  return routes;
+}

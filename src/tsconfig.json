@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+      "module": "commonjs",
+      "target": "esnext",
+      "sourceMap": true,
+      "outDir": "build",
+      "types": [
+          "node"
+      ]
+  },
+  "files": [
+      "index.ts"
+  ]
+}

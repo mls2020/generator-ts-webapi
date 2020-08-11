@@ -1,0 +1,28 @@
+export interface ExpressOptions {
+
+}
+export interface IService {
+#foreach($item in ${api})
+$item.name : ($item.fnArgsDef) => Promise<$item.result>
+#end
+#foreach($item in ${selApi})
+$item.name : ($item.fnArgsDef) => Promise<$item.result>
+#end
+#foreach($item in ${procApi})
+$item.name : ($item.fnArgsDef) => Promise<$item.result>
+#end
+
+}
+export type date = Date;
+
+#foreach($type in ${types})
+  #if ($type.refType)
+    export type $type.typeName = $type.refType;
+  #else
+    export interface $type.typeName {
+      #foreach ($field in $type.fields)
+      $field.fieldName : $field.type.fieldType;
+      #end
+    }
+  #end
+#end
