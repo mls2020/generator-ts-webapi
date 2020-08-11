@@ -3,19 +3,11 @@ import * as Joi from 'joi';
 #foreach($type in $types)
   export var schemaFor${type.typeName} =  Joi.object({
     #foreach ($field in $type.fields)
-
-    #if (${field.type.schema})
-      $field.fieldName : ${field.type.schema}
-      #if (${field.type.required}) .required() #end
-      ,
-    #else
-      $field.fieldName : Joi.${field.type.fieldType}()
-        #if (${field.type.alphanum}) .alphanum() #end
-        #if (${field.type.required}) .required() #end
-        #if (${field.type.min}) .min(${field.type.min}) #end
-        #if (${field.type.max}) .max(${field.type.max}) #end
-      ,
-    #end
+      #if (${field.type.schema})
+        $field.fieldName : ${field.type.schema} #if (${field.type.required}) .required() #end,
+      #else
+        $field.fieldName : Joi.${field.type.fieldType}() #if (${field.type.alphanum}) .alphanum() #end #if (${field.type.required}) .required() #end #if (${field.type.min}) .min(${field.type.min}) #end #if (${field.type.max}) .max(${field.type.max}) #end,
+      #end
     #end
   });
 #end

@@ -1,8 +1,8 @@
 import { Router } from 'express'
-import { IService, ExpressOptions } from './interfaces'
+import * as I from './interfaces'
 import * as schemas from './schemas'
 
-export const createRouter = (service: IService, options?: ExpressOptions) => {
+export const createRouter = (service: I.IService, options?: I.ExpressOptions) => {
   const routes = Router();
   #foreach($item in $api)
     #if ($item.verb=='put')
