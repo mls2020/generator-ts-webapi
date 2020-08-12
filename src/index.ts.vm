@@ -1,10 +1,11 @@
-import * as express from 'express'
-import { IService, ExpressOptions } from './ts-webapi/interfaces'
 import {svc} from './dummySvc'
-import {createRouter} from './ts-webapi/routes'
-const app = express();
-const routes = createRouter(svc);
-app.use(routes);
-app.listen(5010,()=>{
-  console.log('server started');
+
+import {createExpressServer} from './ts-webapi'
+const app = createExpressServer(svc, {
+  useSwagger: true
+});
+
+const port = 5010;
+app.listen(port,()=>{
+  console.log('server started on port', port);
 })

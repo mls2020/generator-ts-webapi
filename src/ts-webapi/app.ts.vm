@@ -1,7 +1,0 @@
-import * as express from 'express'
-import { IService, ExpressOptions } from './interfaces'
-
-export const createExpressServer = (service: IService, options?: ExpressOptions): Express.Application => {
-  const app = express();
-  return app;
-}

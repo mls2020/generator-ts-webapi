@@ -4,65 +4,72 @@ import * as schemas from './schemas'
 
 export const createRouter = (service: I.IService, options?: I.ExpressOptions) => {
   const routes = Router();
-  #foreach($item in $api)
-    #if ($item.verb=='put')
-      routes.$item.verb ('/${item.routeName}/:id', async (req, res, next) => {
+  #foreach($item in $crudApi)
+    #if ($item.put)
+      console.info(`create route PUT ${apiPrefix}/${item.put.routeName}/:id`);
+      routes.$item.put.verb ('${apiPrefix}/${item.put.routeName}/:id', async (req, res, next) => {
         try {
           const id = req.params.id;
-          const {value, error} = schemas.schemaFor${item.args}.validate(req.body);
+          const {value, error} = schemas.schemaFor${item.put.args}.validate(req.body);
           if (error) next(error);
-          const result = await service.$item.name (id,value);
+          const result = await service.$item.put.name (id,value);
           res.json(result)
         } catch (error) {
           next(error);
         }
       });
-    #elseif ($item.verb=='post')
-      routes.$item.verb ('/${item.routeName}', async (req, res, next) => {
-        try {
-          const {value, error} = schemas.schemaFor${item.args}.validate(req.body);
-          if (error) next(error);
-          const result = await service.$item.name (value);
-          res.json(result)
-        } catch (error) {
-          next(error);
-        }
-      });
-    #elseif ($item.verb=='delete')
-      routes.$item.verb ('/${item.routeName}/:id', async (req, res, next) => {
-        try {
-          const result = await service.$item.name (req.params.id);
-          res.json(result)
-        } catch (error) {
-          next(error);
-        }
-      });
-    #elseif ($item.verb=='get')
-      #if ($item.list)
-        routes.$item.verb ('/${item.routeName}', async (req, res, next) => {
-          try {
-            const result = await service.$item.name ();
-            res.json(result)
-          } catch (error) {
-            next(error);
-          }
-        });
-      #else
-        routes.$item.verb ('/${item.routeName}/:id', async (req, res, next) => {
-          try {
-            const result = await service.$item.name (req.params.id);
-            res.json(result)
-          } catch (error) {
-            next(error);
-          }
-        });
-      #end
     #end
-
+    #if ($item.post)
+      console.info(`create route POST ${apiPrefix}/${item.post.routeName}`);
+      routes.$item.post.verb ('${apiPrefix}/${item.post.routeName}', async (req, res, next) => {
+        try {
+          const {value, error} = schemas.schemaFor${item.post.args}.validate(req.body);
+          if (error) next(error);
+          const result = await service.$item.post.name (value);
+          res.json(result)
+        } catch (error) {
+          next(error);
+        }
+      });
+    #end
+    #if ($item.delete)
+      console.info(`create route DELETE ${apiPrefix}/${item.delete.routeName}/:id`);
+      routes.$item.delete.verb ('${apiPrefix}/${item.delete.routeName}/:id', async (req, res, next) => {
+        try {
+          const result = await service.$item.delete.name (req.params.id);
+          res.json(result)
+        } catch (error) {
+          next(error);
+        }
+      });
+    #end
+    #if ($item.list)
+      console.info(`create route GET ${apiPrefix}/${item.list.routeName}`);
+      routes.$item.list.verb ('${apiPrefix}/${item.list.routeName}', async (req, res, next) => {
+        try {
+          const result = await service.$item.list.name ();
+          res.json(result)
+        } catch (error) {
+          next(error);
+        }
+      });
+    #end
+    #if ($item.getById)
+      console.info(`create route GET ${apiPrefix}/${item.getById.routeName}/:id`);
+      routes.$item.getById.verb ('${apiPrefix}/${item.getById.routeName}/:id', async (req, res, next) => {
+        try {
+          const result = await service.$item.getById.name (req.params.id);
+          res.json(result)
+        } catch (error) {
+          next(error);
+        }
+      });
+    #end
   #end
 
   #foreach($item in $procApi)
-    routes.$item.verb ('/${item.routeName}', async (req, res, next) => {
+    console.info(`create route ${item.verb} ${apiPrefix}/${item.routeName}`);
+    routes.$item.verb ('${apiPrefix}/${item.routeName}', async (req, res, next) => {
       try {
         const {value,error}= schemas.schemaForArgs_${item.name}.validate(req.body);
         if (error) next(error);
@@ -75,7 +82,8 @@ export const createRouter = (service: I.IService, options?: I.ExpressOptions) =>
   #end
 
   #foreach($item in $selApi)
-    routes.$item.verb ('/${item.routeName}', async (req, res, next) => {
+    console.info(`create route ${item.verb} ${apiPrefix}/${item.routeName}`);
+    routes.$item.verb ('${apiPrefix}/${item.routeName}', async (req, res, next) => {
       try {
         const {value,error}= schemas.schemaForArgs_${item.name}.validate(req.query);
         if (error) next(error);

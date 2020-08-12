@@ -1,0 +1,137 @@
+export const swaggerYaml = `
+swagger: '2.0'
+info:
+  version: $ver
+  title: $name
+  description: $name
+schemes:
+  - http
+paths:
+#foreach($item in $crudApi)
+#if ($item.put)
+  '${apiPrefix}/${item.put.routeName}/{id}':
+#elseif ($item.getById)
+  '${apiPrefix}/${item.getById.routeName}/{id}':
+#elseif ($item.delete)
+  '${apiPrefix}/${item.delete.routeName}/{id}':
+#end
+#if ($item.put)
+    put:
+      tags:
+        - ${item.put.routeName}
+      operationId: ${item.put.name}
+      consumes:
+        - application/json-patch+json
+        - application/json
+        - text/json
+        - application/*+json
+      produces: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: value
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/${item.put.definition}'
+      responses:
+        '200':
+          description: Success
+#end
+#if ($item.getById)
+    get:
+      tags:
+        - ${item.getById.routeName}
+      operationId: ${item.getById.name}
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/${item.getById.definition}'
+
+#end
+#if ($item.delete)
+    delete:
+      tags:
+        - ${item.delete.routeName}
+      operationId: ${item.delete.name}
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Success
+#end
+#if ($item.post)
+  '${apiPrefix}/${item.post.routeName}':
+#elseif ($item.list)
+  '${apiPrefix}/${item.list.routeName}':
+#end
+
+#if ($item.post)
+    post:
+      tags:
+        - ${item.post.routeName}
+      operationId: ${item.post.name}
+      consumes:
+        - application/json-patch+json
+        - application/json
+        - text/json
+        - application/*+json
+      produces: []
+      parameters:
+        - name: value
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/${item.post.definition}'
+      responses:
+        '200':
+          description: Success
+#end
+#if ($item.list)
+    get:
+      tags:
+        - ${item.list.routeName}
+      operationId: ${item.list.name}
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/${item.list.definition}'
+#end
+#end
+
+definitions:
+#foreach($type in ${types})
+#if ($type.refType)
+#else
+  ${type.typeName}:
+    type: object
+    properties:
+#foreach ($field in $type.fields)
+      ${field.fieldName}:
+#if (${field.type.swaggerIsRef})
+        $ref: '#/definitions/${field.type.fieldType}'
+#else
+        type: $field.type.swaggerFieldType
+#end
+#end
+#end
+#end
+`

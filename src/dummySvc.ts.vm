@@ -4,6 +4,36 @@ import {
 } from './ts-webapi/interfaces'
 
 export const svc :IService = {
+
+#foreach($item in ${crudApi})
+  #if (${item.getById})
+    $item.getById.name : ($item.getById.fnArgsDef) => {
+      return Promise.resolve(`supposed to return $item.getById.result object` as any);
+    },
+  #end
+  #if (${item.list})
+    $item.list.name : ($item.list.fnArgsDef) => {
+      return Promise.resolve(`supposed to return $item.list.result object` as any);
+    },
+  #end
+  #if (${item.post})
+    $item.post.name : ($item.post.fnArgsDef) => {
+      return Promise.resolve(`supposed to return $item.post.result object` as any);
+    },
+  #end
+  #if (${item.put})
+    $item.put.name : ($item.put.fnArgsDef) => {
+      return Promise.resolve(`supposed to return $item.put.result object` as any);
+    },
+  #end
+  #if (${item.delete})
+    $item.delete.name : ($item.delete.fnArgsDef) => {
+      return Promise.resolve(`supposed to return $item.delete.result object` as any);
+    },
+  #end
+
+#end
+
 #foreach($item in ${api})
 $item.name : ($item.fnArgsDef) => {
   return Promise.resolve(`supposed to return $item.result object` as any);

@@ -1,9 +1,13 @@
 export interface ExpressOptions {
-
+  useSwagger?: boolean
 }
 export interface IService {
-#foreach($item in ${api})
-$item.name : ($item.fnArgsDef) => Promise<$item.result>
+#foreach($item in ${crudApi})
+  #if (${item.getById}) $item.getById.name : ($item.getById.fnArgsDef) => Promise<$item.getById.result> #end
+  #if (${item.list}) $item.list.name : ($item.list.fnArgsDef) => Promise<$item.list.result> #end
+  #if (${item.post}) $item.post.name : ($item.post.fnArgsDef) => Promise<$item.post.result> #end
+  #if (${item.put}) $item.put.name : ($item.put.fnArgsDef) => Promise<$item.put.result> #end
+  #if (${item.delete}) $item.delete.name : ($item.delete.fnArgsDef) => Promise<$item.delete.result> #end
 #end
 #foreach($item in ${selApi})
 $item.name : ($item.fnArgsDef) => Promise<$item.result>

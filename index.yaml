@@ -5,9 +5,14 @@ scope:
     "index.ts": "src/index.ts.vm"
     "dummySvc.ts": "src/dummySvc.ts.vm"
     "tsconfig.json": "src/tsconfig.json"
+    "yarn.lock": "src/yarn.lock"
 
   # Actual Lib
-    "ts-webapi/app.ts": "src/ts-webapi/app.ts.vm"
+    "ts-webapi/index.ts": "src/ts-webapi/index.ts.vm"
     "ts-webapi/routes.ts": "src/ts-webapi/routes.ts.vm"
     "ts-webapi/interfaces.ts": "src/ts-webapi/interfaces.ts.vm"
     "ts-webapi/schemas.ts": "src/ts-webapi/schemas.ts.vm"
+
+  # Swagger file
+    "ts-webapi/swagger/swagger.ts": "src/ts-webapi/swagger/swagger.ts"
+    "ts-webapi/swagger/swagger.yaml.ts": "src/ts-webapi/swagger/swagger.yaml.ts.vm"
