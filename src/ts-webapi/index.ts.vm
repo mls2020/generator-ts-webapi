@@ -2,12 +2,15 @@ import * as express from 'express'
 import { IService, ExpressOptions } from './interfaces'
 import {createRouter} from './routes';
 import swaggerRouter from './swagger/swagger';
+import {errorHandler,notFound} from './common/errors'
 export const createExpressServer = (service: IService, options?: ExpressOptions) => {
   const app = express();
   if (options.useSwagger) {
     app.use(swaggerRouter);
   }
   const routes = createRouter(service);
+  routes.use(notFound);
+  routes.use(errorHandler);
   app.use(routes);
   return app;
 }
