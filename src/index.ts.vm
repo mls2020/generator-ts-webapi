@@ -1,14 +1,20 @@
+import * as express from 'express'
 import {svc} from './dummySvc'
-import {createExpressServer} from './ts-webapi'
+import {createMiddlewares} from './ts-webapi'
 const path = require('path');
 
-
-const app = createExpressServer(svc, b=>{
+const middlewares = createMiddlewares(svc, b=>{
   return b.useSwagger()
           .serveSpa(path.resolve(__dirname, 'index.html'));
 });
 
 const port = 5010;
+
+const app = express();
+app.use(middlewares.swagger);
+app.use(middlewares.routes);
+app.use(middlewares.serveSpa);
+
 app.listen(port,()=>{
   console.info('server started on port', port);
 })

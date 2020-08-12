@@ -1,26 +1,19 @@
-import * as express from 'express'
 import { IService } from './interfaces'
-import {createRouter} from './routes';
+import { createRouter } from './routes';
 import swaggerRouter from './swagger/swagger';
 import serveSpa from './common/serveSpa';
-import {ConfigurationFunction,builder,Configuration,getConfiguration} from './common/configurator';
-export const createExpressServer = (service: IService, options?: ConfigurationFunction) => {
-  const app = express();
+import { ConfigurationFunction, builder, getConfiguration } from './common/configurator';
+export const createMiddlewares = (service: IService, options?: ConfigurationFunction) => {
   if (options) {
     options(builder)
   }
   const config = getConfiguration();
-  if (config.useSwagger) {
-    app.use(swaggerRouter);
-  }
-  const routes = createRouter(service,config);
-  app.use(routes);
+  console.info(Object.keys(config).filter(i => config[i]).join('\n'));
 
-  if (config.serveSpa) {
-    app.use(serveSpa(config.serveSpa.indexFile));
+  return {
+    swagger: config.useSwagger && swaggerRouter,
+    routes: createRouter(service, config),
+    serveSpa: config.serveSpa && serveSpa(config.serveSpa.indexFile)
   }
-
-  console.info(Object.keys(config).filter(i=>config[i]).join('\n'));
-  return app;
 }
 
