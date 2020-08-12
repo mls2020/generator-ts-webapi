@@ -1,17 +1,26 @@
 import * as express from 'express'
-import { IService, ExpressOptions } from './interfaces'
+import { IService } from './interfaces'
 import {createRouter} from './routes';
 import swaggerRouter from './swagger/swagger';
-import {errorHandler,notFound} from './common/errors'
-export const createExpressServer = (service: IService, options?: ExpressOptions) => {
+import serveSpa from './common/serveSpa';
+import {ConfigurationFunction,builder,Configuration,getConfiguration} from './common/configurator';
+export const createExpressServer = (service: IService, options?: ConfigurationFunction) => {
   const app = express();
-  if (options.useSwagger) {
+  if (options) {
+    options(builder)
+  }
+  const config = getConfiguration();
+  if (config.useSwagger) {
     app.use(swaggerRouter);
   }
-  const routes = createRouter(service);
-  routes.use(notFound);
-  routes.use(errorHandler);
+  const routes = createRouter(service,config);
   app.use(routes);
+
+  if (config.serveSpa) {
+    app.use(serveSpa(config.serveSpa.indexFile));
+  }
+
+  console.info(Object.keys(config).filter(i=>config[i]).join('\n'));
   return app;
 }
 

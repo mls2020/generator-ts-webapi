@@ -1,8 +1,10 @@
 import { Router } from 'express'
 import * as I from './interfaces'
 import * as schemas from './schemas'
+import {errorHandler,notFound} from './common/errors'
+import {Configuration} from './common/configurator'
 
-export const createRouter = (service: I.IService, options?: I.ExpressOptions) => {
+export const createRouter = (service: I.IService,config:Configuration) => {
   const routes = Router();
   #foreach($item in $crudApi)
     #if ($item.put)
@@ -94,6 +96,9 @@ export const createRouter = (service: I.IService, options?: I.ExpressOptions) =>
       }
     });
   #end
+
+  routes.use('${apiPrefix}',notFound);
+  routes.use('${apiPrefix}',errorHandler);
 
   return routes;
 }

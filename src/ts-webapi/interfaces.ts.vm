@@ -1,6 +1,3 @@
-export interface ExpressOptions {
-  useSwagger?: boolean
-}
 export interface IService {
 #foreach($item in ${crudApi})
   #if (${item.getById}) $item.getById.name : ($item.getById.fnArgsDef) => Promise<$item.getById.result> #end

@@ -13,6 +13,8 @@ scope:
     "ts-webapi/interfaces.ts": "src/ts-webapi/interfaces.ts.vm"
     "ts-webapi/schemas.ts": "src/ts-webapi/schemas.ts.vm"
     "ts-webapi/common/errors.ts": "src/ts-webapi/common/errors.ts.vm"
+    "ts-webapi/common/serveSpa.ts": "src/ts-webapi/common/serveSpa.ts.vm"
+    "ts-webapi/common/configurator.ts": "src/ts-webapi/common/configurator.ts.vm"
 
   # Swagger file
     "ts-webapi/swagger/swagger.ts": "src/ts-webapi/swagger/swagger.ts"

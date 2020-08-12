@@ -1,0 +1,27 @@
+
+export interface Configuration {
+  useSwagger?: boolean,
+  serveSpa?: {
+    indexFile: string
+  }
+}
+
+let configuration: Configuration = {}
+
+export const builder = {
+  useSwagger: () => {
+    configuration.useSwagger = true;
+    return builder;
+  },
+  serveSpa: (indexFile: string) => {
+    configuration.serveSpa = {
+      indexFile
+    }
+    return builder;
+  }
+}
+
+export const getConfiguration = () => configuration;
+export type ConfigurationBuilder = typeof builder;
+export type ConfigurationFunction = (builder: ConfigurationBuilder) => ConfigurationBuilder
+

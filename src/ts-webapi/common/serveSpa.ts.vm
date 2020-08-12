@@ -1,0 +1,13 @@
+// handle every other route with index.html, which will contain
+
+import { Router } from 'express'
+
+
+export default (indexFile:string) => {
+  const router = Router();
+  router.get('*', function (request: any, response: any) {
+    response.sendFile(indexFile)
+  })
+  return router;
+};
+
